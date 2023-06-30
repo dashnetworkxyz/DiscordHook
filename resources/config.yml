@@ -1,0 +1,12 @@
+# Guild ID
+guild: "1091828404891947059"
+
+# Message Channel IDs
+global-channel: "1093621572058742816"
+staff-channel: "1093630805491863611"
+admin-channel: "1093636561989550171"
+owner-channel: "1093632549085003836"
+
+# Role IDs
+staff-role: "1093640251567775854"
+owner-role: "1093619816344080544"
