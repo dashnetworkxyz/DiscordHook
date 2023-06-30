@@ -22,8 +22,4 @@ public final class RoleList {
         );
     }
 
-    public static boolean isOwner(Member member) {
-        return member.isOwner() || member.getRoles().contains(OWNER_ROLE);
-    }
-
 }
