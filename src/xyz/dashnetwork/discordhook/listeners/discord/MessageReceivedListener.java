@@ -1,19 +1,25 @@
 package xyz.dashnetwork.discordhook.listeners.discord;
 
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import xyz.dashnetwork.celest.utils.StringUtils;
 import xyz.dashnetwork.celest.utils.chat.ColorUtils;
 import xyz.dashnetwork.celest.utils.chat.MessageUtils;
 import xyz.dashnetwork.celest.utils.chat.builder.MessageBuilder;
+import xyz.dashnetwork.celest.utils.chat.builder.TextSection;
 import xyz.dashnetwork.celest.utils.connection.User;
 import xyz.dashnetwork.discordhook.DiscordHook;
 import xyz.dashnetwork.discordhook.utils.ChannelList;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MessageReceivedListener extends ListenerAdapter {
 
@@ -27,7 +33,8 @@ public class MessageReceivedListener extends ListenerAdapter {
         if (!DiscordHook.getGuild().getId().equals(channel.getGuild().getId()))
             return;
 
-        String content = event.getMessage().getContentStripped();
+        Message message = event.getMessage();
+        String content = message.getContentStripped();
 
         boolean global = ChannelList.isGlobal(channel);
         boolean staff = ChannelList.isStaff(channel);
@@ -47,35 +54,54 @@ public class MessageReceivedListener extends ListenerAdapter {
 
         net.dv8tion.jda.api.entities.User author = event.getAuthor();
         NamedTextColor named = NamedTextColor.nearestTo(TextColor.color(color.getRGB()));
-        String section = ColorUtils.fromNamedTextColor(named);
+        String nearest = ColorUtils.fromNamedTextColor(named);
         String nickname = member.getNickname();
         String username = author.getName();
         String id = author.getId();
-        MessageBuilder message = new MessageBuilder();
+        MessageBuilder builder = new MessageBuilder();
 
         if (nickname == null)
             nickname = author.getGlobalName();
         if (nickname == null)
             nickname = username;
 
-        if (staff) message.append("&9&lStaff&r ");
-        else if (admin) message.append("&9&lAdmin&r ");
-        else if (owner) message.append("&9&lOwner&r ");
+        if (staff) builder.append("&9&lStaff&r ");
+        else if (admin) builder.append("&9&lAdmin&r ");
+        else if (owner) builder.append("&9&lOwner&r ");
 
-        message.append("&9&lDiscord").hover("&6" + username).insertion(id);
-        message.append("&f " + section + nickname).hover("&6" + username).insertion(id);
+        builder.append("&9&lDiscord").hover("&6" + username).insertion(id);
+        builder.append("&f " + nearest + nickname).hover("&6" + username).insertion(id);
 
-        if (global) message.append("&r &l»&r ");
-        else if (staff) message.append("&r &6&l»&6 ");
-        else if (admin) message.append("&r &3&l»&3 ");
-        else message.append("&r &c&l»&c ");
+        if (global) builder.append("&r &l»&r");
+        else if (staff) builder.append("&r &6&l»&6");
+        else if (admin) builder.append("&r &3&l»&3");
+        else builder.append("&r &c&l»&c");
 
-        message.append(content);
+        for (String split : content.split(" ")) {
+            if (split.length() > 0) {
+                TextSection section = builder.append(" " + split);
 
-        if (global) MessageUtils.broadcast(message::build);
-        else if (staff) MessageUtils.broadcast(User::isStaff, message::build);
-        else if (admin) MessageUtils.broadcast(User::isAdmin, message::build);
-        else MessageUtils.broadcast(User::isOwner, message::build);
+                if (StringUtils.matchesUrl(split)) {
+                    String url = split.toLowerCase().startsWith("http") ? split : "https://" + split;
+
+                    section.hover("&7Click to open &6" + url).click(ClickEvent.openUrl(url));
+                }
+            }
+        }
+
+        for (Message.Attachment attachment : message.getAttachments()) {
+            String url = attachment.getUrl();
+
+            builder.append(" ");
+            builder.append("&7&o(attachment)")
+                    .hover("&7Click to open &6" + url)
+                    .click(ClickEvent.openUrl(url));
+        }
+
+        if (global) MessageUtils.broadcast(builder::build);
+        else if (staff) MessageUtils.broadcast(User::isStaff, builder::build);
+        else if (admin) MessageUtils.broadcast(User::isAdmin, builder::build);
+        else MessageUtils.broadcast(User::isOwner, builder::build);
     }
 
 }

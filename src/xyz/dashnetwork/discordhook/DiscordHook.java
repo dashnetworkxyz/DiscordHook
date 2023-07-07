@@ -109,7 +109,7 @@ public final class DiscordHook {
         ChannelList.GLOBAL_CHANNEL.sendMessage("```diff\n+ Server has started\n```").queue();
     }
 
-    @Subscribe
+    @Subscribe(async = false)
     public void onProxyShutdown(ProxyShutdownEvent event) {
         ChannelList.GLOBAL_CHANNEL.sendMessage("```diff\n- Server has stopped\n```").queue();
 
