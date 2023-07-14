@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.dashnetwork</groupId>
     <artifactId>DiscordHook</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -63,7 +63,7 @@
         <dependency>
             <groupId>xyz.dashnetwork</groupId>
             <artifactId>Celest</artifactId>
-            <version>0.16</version>
+            <version>0.17</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -76,6 +76,12 @@
             <groupId>club.minnced</groupId>
             <artifactId>discord-webhooks</artifactId>
             <version>0.8.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.vankka</groupId>
+            <artifactId>mcdiscordreserializer</artifactId>
+            <version>4.3.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

@@ -1,5 +1,6 @@
 package xyz.dashnetwork.discordhook.listeners.discord;
 
+import dev.vankka.mcdiscordreserializer.minecraft.MinecraftSerializer;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
@@ -10,16 +11,14 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import xyz.dashnetwork.celest.utils.StringUtils;
 import xyz.dashnetwork.celest.utils.chat.ColorUtils;
-import xyz.dashnetwork.celest.utils.chat.MessageUtils;
+import xyz.dashnetwork.celest.utils.chat.ComponentUtils;
 import xyz.dashnetwork.celest.utils.chat.builder.MessageBuilder;
-import xyz.dashnetwork.celest.utils.chat.builder.TextSection;
+import xyz.dashnetwork.celest.utils.chat.builder.Section;
 import xyz.dashnetwork.celest.utils.connection.User;
 import xyz.dashnetwork.discordhook.DiscordHook;
 import xyz.dashnetwork.discordhook.utils.ChannelList;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MessageReceivedListener extends ListenerAdapter {
 
@@ -69,17 +68,18 @@ public class MessageReceivedListener extends ListenerAdapter {
         else if (admin) builder.append("&9&lAdmin&r ");
         else if (owner) builder.append("&9&lOwner&r ");
 
-        builder.append("&9&lDiscord").hover("&6" + username).insertion(id);
-        builder.append("&f " + nearest + nickname).hover("&6" + username).insertion(id);
+        builder.append("&9&lDiscord&f " + nearest + nickname).hover("&6" + username).insertion(id);
 
         if (global) builder.append("&r &l»&r");
         else if (staff) builder.append("&r &6&l»&6");
         else if (admin) builder.append("&r &3&l»&3");
         else builder.append("&r &c&l»&c");
 
+        content = ComponentUtils.toString(MinecraftSerializer.INSTANCE.serialize(content));
+
         for (String split : content.split(" ")) {
             if (split.length() > 0) {
-                TextSection section = builder.append(" " + split);
+                Section section = builder.append(" " + split);
 
                 if (StringUtils.matchesUrl(split)) {
                     String url = split.toLowerCase().startsWith("http") ? split : "https://" + split;
@@ -98,10 +98,10 @@ public class MessageReceivedListener extends ListenerAdapter {
                     .click(ClickEvent.openUrl(url));
         }
 
-        if (global) MessageUtils.broadcast(builder::build);
-        else if (staff) MessageUtils.broadcast(User::isStaff, builder::build);
-        else if (admin) MessageUtils.broadcast(User::isAdmin, builder::build);
-        else MessageUtils.broadcast(User::isOwner, builder::build);
+        if (global) builder.broadcast();
+        else if (staff) builder.broadcast(User::isStaff);
+        else if (admin) builder.broadcast(User::isAdmin);
+        else builder.broadcast(User::isOwner);
     }
 
 }
