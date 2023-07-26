@@ -3,9 +3,11 @@ package xyz.dashnetwork.discordhook.listeners.discord;
 import dev.vankka.mcdiscordreserializer.minecraft.MinecraftSerializer;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -19,6 +21,7 @@ import xyz.dashnetwork.discordhook.DiscordHook;
 import xyz.dashnetwork.discordhook.utils.ChannelList;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class MessageReceivedListener extends ListenerAdapter {
 
@@ -64,18 +67,28 @@ public class MessageReceivedListener extends ListenerAdapter {
         if (nickname == null)
             nickname = username;
 
-        if (staff) builder.append("&9&lStaff&r ");
-        else if (admin) builder.append("&9&lAdmin&r ");
-        else if (owner) builder.append("&9&lOwner&r ");
+        if (staff) builder.append("&9&lStaff&f ");
+        else if (admin) builder.append("&9&lAdmin&f ");
+        else if (owner) builder.append("&9&lOwner&f ");
 
         builder.append("&9&lDiscord&f " + nearest + nickname).hover("&6" + username).insertion(id);
 
-        if (global) builder.append("&r &l»&r");
-        else if (staff) builder.append("&r &6&l»&6");
-        else if (admin) builder.append("&r &3&l»&3");
-        else builder.append("&r &c&l»&c");
+        if (global) builder.append("&f &l»&f");
+        else if (staff) builder.append("&f &6&l»&6");
+        else if (admin) builder.append("&f &3&l»&3");
+        else builder.append("&f &c&l»&c");
 
-        content = ComponentUtils.toString(MinecraftSerializer.INSTANCE.serialize(content));
+        if (message.getType().equals(MessageType.INLINE_REPLY)) {
+            Message referenced = Objects.requireNonNull(message.getMessageReference()).resolve().complete();
+            Component reply = MinecraftSerializer.INSTANCE.serialize(referenced.getContentDisplay());
+
+            builder.append(" ");
+            builder.append("&7&o(reply)&f")
+                    .hover("&6" + referenced.getAuthor().getName())
+                    .hover("&7" + ColorUtils.strip(ComponentUtils.toString(reply)));
+        }
+
+        content = ColorUtils.strip(ComponentUtils.toString(MinecraftSerializer.INSTANCE.serialize(content)));
 
         for (String split : content.split(" ")) {
             if (split.length() > 0) {
