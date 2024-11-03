@@ -7,11 +7,11 @@ import xyz.dashnetwork.discordhook.DiscordHook;
 
 public final class ChannelList {
 
+    public static final TextChannel GLOBAL_CHANNEL;
+    public static final TextChannel STAFF_CHANNEL;
+    public static final TextChannel ADMIN_CHANNEL;
+    public static final TextChannel OWNER_CHANNEL;
     private static final Guild guild = DiscordHook.getGuild();
-    public static TextChannel GLOBAL_CHANNEL;
-    public static TextChannel STAFF_CHANNEL;
-    public static TextChannel ADMIN_CHANNEL;
-    public static TextChannel OWNER_CHANNEL;
 
     static {
         GLOBAL_CHANNEL = guild.getTextChannelById(Configuration.get("global-channel"));

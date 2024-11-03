@@ -11,6 +11,7 @@ import xyz.dashnetwork.discordhook.command.DiscordCommand;
 import xyz.dashnetwork.discordhook.utils.RoleList;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class CommandList extends DiscordCommand {
 
@@ -43,7 +44,7 @@ public final class CommandList extends DiscordCommand {
         builder.setColor(0xFFAA00);
 
         for (Map.Entry<String, List<String>> entry : map.entrySet()) {
-            String players = ListUtils.convertToString(entry.getValue(), string -> string, ", ");
+            String players = String.join(", ", entry.getValue());
             builder.addField(entry.getKey(), players, false);
         }
 

@@ -1,9 +1,8 @@
 package xyz.dashnetwork.discordhook.utils;
 
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.ConfigurationOptions;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
-import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.ConfigurationOptions;
+import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 import xyz.dashnetwork.discordhook.DiscordHook;
 
 import java.io.File;
@@ -17,7 +16,7 @@ public final class Configuration {
     private static final URL resource = Configuration.class.getClassLoader().getResource("config.yml");
     private static final File folder = DiscordHook.getDirectory().toFile();
     private static final File file = new File(folder, "config.yml");
-    private static final ConfigurationOptions options = ConfigurationOptions.defaults().withShouldCopyDefaults(true);
+    private static final ConfigurationOptions options = ConfigurationOptions.defaults().shouldCopyDefaults(true);
     private static ConfigurationNode config;
 
     public static void load() {
@@ -35,11 +34,11 @@ public final class Configuration {
             }
         }
 
-        YAMLConfigurationLoader.Builder builder = YAMLConfigurationLoader.builder();
-        builder.setDefaultOptions(options);
-        builder.setFile(file);
+        YamlConfigurationLoader.Builder builder = YamlConfigurationLoader.builder();
+        builder.defaultOptions(options);
+        builder.file(file);
 
-        ConfigurationLoader<ConfigurationNode> loader = builder.build();
+        YamlConfigurationLoader loader = builder.build();
 
         try {
             config = loader.load(options);
@@ -48,6 +47,6 @@ public final class Configuration {
         }
     }
 
-    public static String get(String node) { return config.getNode(node).getString(); }
+    public static String get(String node) { return config.node(node).getString(); }
 
 }

@@ -34,7 +34,7 @@ import java.nio.file.Path;
 @Plugin(
         id = "discordhook",
         name = "DiscordHook",
-        version = "1.0.0",
+        version = "1.0.1",
         authors = {"MasterDash5"},
         dependencies = {
                 @Dependency(id = "celest")

@@ -23,7 +23,7 @@ import xyz.dashnetwork.discordhook.utils.ChannelList;
 import java.awt.*;
 import java.util.Objects;
 
-public class MessageReceivedListener extends ListenerAdapter {
+public final class MessageReceivedListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -36,7 +36,7 @@ public class MessageReceivedListener extends ListenerAdapter {
             return;
 
         Message message = event.getMessage();
-        String content = message.getContentStripped();
+        String content = message.getContentDisplay();
 
         boolean global = ChannelList.isGlobal(channel);
         boolean staff = ChannelList.isStaff(channel);
@@ -71,7 +71,7 @@ public class MessageReceivedListener extends ListenerAdapter {
         else if (admin) builder.append("&9&lAdmin&f ");
         else if (owner) builder.append("&9&lOwner&f ");
 
-        builder.append("&9&lDiscord&f " + nearest + nickname).hover("&6" + username).insertion(id);
+        builder.append("&8[&9Discord&8]&f " + nearest + nickname).hover("&6" + username).insertion(id);
 
         if (global) builder.append("&f &l»&f");
         else if (staff) builder.append("&f &6&l»&6");
@@ -85,13 +85,14 @@ public class MessageReceivedListener extends ListenerAdapter {
             builder.append(" ");
             builder.append("&7&o(reply)&f")
                     .hover("&6" + referenced.getAuthor().getName())
-                    .hover("&7" + ColorUtils.strip(ComponentUtils.toString(reply)));
+                    .hover("&7" + ComponentUtils.toString(reply));
+            builder.append(owner ? "&c" : admin ? "&3" : staff ? "&6" : "&f");
         }
 
         content = ColorUtils.strip(ComponentUtils.toString(MinecraftSerializer.INSTANCE.serialize(content)));
 
         for (String split : content.split(" ")) {
-            if (split.length() > 0) {
+            if (!split.isEmpty()) {
                 Section section = builder.append(" " + split);
 
                 if (StringUtils.matchesUrl(split)) {
