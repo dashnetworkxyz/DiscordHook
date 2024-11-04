@@ -11,6 +11,7 @@ public final class ChannelList {
     public static final TextChannel STAFF_CHANNEL;
     public static final TextChannel ADMIN_CHANNEL;
     public static final TextChannel OWNER_CHANNEL;
+    public static final TextChannel BOT_DM_CHANNEL;
     private static final Guild guild = DiscordHook.getGuild();
 
     static {
@@ -18,6 +19,7 @@ public final class ChannelList {
         STAFF_CHANNEL = guild.getTextChannelById(Configuration.get("staff-channel"));
         ADMIN_CHANNEL = guild.getTextChannelById(Configuration.get("admin-channel"));
         OWNER_CHANNEL = guild.getTextChannelById(Configuration.get("owner-channel"));
+        BOT_DM_CHANNEL = guild.getTextChannelById(Configuration.get("bot-dm-channel"));
     }
 
     public static boolean isGlobal(Channel channel) { return channel.getId().equals(GLOBAL_CHANNEL.getId()); }

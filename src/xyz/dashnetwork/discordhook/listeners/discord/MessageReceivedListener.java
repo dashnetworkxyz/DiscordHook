@@ -1,10 +1,15 @@
 package xyz.dashnetwork.discordhook.listeners.discord;
 
 import dev.vankka.mcdiscordreserializer.minecraft.MinecraftSerializer;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageType;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
+import net.dv8tion.jda.api.entities.sticker.StickerItem;
+import net.dv8tion.jda.api.entities.sticker.StickerSnowflake;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.kyori.adventure.text.Component;
@@ -27,16 +32,54 @@ public final class MessageReceivedListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.isWebhookMessage() || !event.isFromGuild() || event.getAuthor().isBot())
+        net.dv8tion.jda.api.entities.User author = event.getAuthor();
+        Message message = event.getMessage();
+        String content = message.getContentDisplay();
+
+        if (!event.isFromGuild()) {
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.setColor(0x55FF55);
+            builder.setAuthor(author.getName(), null, author.getAvatarUrl());
+            builder.setDescription(content);
+            builder.setTimestamp(message.getTimeCreated());
+
+            for (StickerItem sticker : message.getStickers()) {
+                builder.setImage(sticker.getIconUrl());
+                break;
+            }
+
+            StringBuilder attachmentUrls = new StringBuilder();
+            boolean imageSet = false;
+
+            for (Message.Attachment attachment : message.getAttachments()) {
+                if (!attachmentUrls.isEmpty())
+                    attachmentUrls.append("\n");
+
+                attachmentUrls.append(attachment.getUrl());
+
+                if (attachment.isImage() && !imageSet) {
+                    builder.setImage(attachment.getUrl());
+                    imageSet = true;
+                }
+            }
+
+            if (!attachmentUrls.isEmpty())
+                builder.addField("Attachments", attachmentUrls.toString(), false);
+
+            if (message.getType().equals(MessageType.INLINE_REPLY))
+                builder.setFooter(Objects.requireNonNull(message.getMessageReference()).resolve().complete().getContentDisplay());
+
+            ChannelList.BOT_DM_CHANNEL.sendMessageEmbeds(builder.build()).queue();
+            return;
+        }
+
+        if (event.isWebhookMessage() || event.getAuthor().isBot())
             return;
 
         GuildMessageChannelUnion channel = event.getGuildChannel();
 
         if (!DiscordHook.getGuild().getId().equals(channel.getGuild().getId()))
             return;
-
-        Message message = event.getMessage();
-        String content = message.getContentDisplay();
 
         boolean global = ChannelList.isGlobal(channel);
         boolean staff = ChannelList.isStaff(channel);
@@ -54,7 +97,6 @@ public final class MessageReceivedListener extends ListenerAdapter {
         if (color == null)
             color = Color.GRAY;
 
-        net.dv8tion.jda.api.entities.User author = event.getAuthor();
         NamedTextColor named = NamedTextColor.nearestTo(TextColor.color(color.getRGB()));
         String nearest = ColorUtils.fromNamedTextColor(named);
         String nickname = member.getNickname();
