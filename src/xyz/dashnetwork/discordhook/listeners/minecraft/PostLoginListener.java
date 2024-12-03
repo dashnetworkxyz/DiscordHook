@@ -11,7 +11,7 @@ import xyz.dashnetwork.discordhook.utils.ChannelList;
 
 public final class PostLoginListener {
 
-    @Subscribe (priority = 0)
+    @Subscribe(priority = 0)
     public void onPostLogin(PostLoginEvent event) {
         Player player = event.getPlayer();
         User user = User.getUser(player);
