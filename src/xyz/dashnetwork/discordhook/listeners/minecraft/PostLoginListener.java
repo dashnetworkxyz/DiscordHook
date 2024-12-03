@@ -1,5 +1,6 @@
 package xyz.dashnetwork.discordhook.listeners.minecraft;
 
+import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.proxy.Player;
@@ -11,7 +12,7 @@ import xyz.dashnetwork.discordhook.utils.ChannelList;
 
 public final class PostLoginListener {
 
-    @Subscribe(priority = 0)
+    @Subscribe(order = PostOrder.EARLY) // Run before Celest
     public void onPostLogin(PostLoginEvent event) {
         Player player = event.getPlayer();
         User user = User.getUser(player);
