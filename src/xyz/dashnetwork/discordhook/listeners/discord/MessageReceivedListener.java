@@ -149,7 +149,7 @@ public final class MessageReceivedListener extends ListenerAdapter {
             String url = attachment.getUrl();
 
             builder.append(" ");
-            builder.append("&7&o(attachment)")
+            builder.append("&7&o(" + attachment.getFileName() + ")")
                     .hover("&7Click to open &6" + url)
                     .click(ClickEvent.openUrl(url));
         }
