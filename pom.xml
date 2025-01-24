@@ -50,7 +50,7 @@
         </repository>
         <repository>
             <id>dashnetwork-repo</id>
-            <url>https://jenkins.dashnetwork.xyz/plugin/repository/project/Celest/LastSuccessful/repository/</url>
+            <url>https://jenkins.dashnetwork.xyz/plugin/repository/everything/</url>
         </repository>
     </repositories>
     <dependencies>
