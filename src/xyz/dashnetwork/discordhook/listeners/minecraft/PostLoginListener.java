@@ -28,9 +28,6 @@ public final class PostLoginListener {
 
             ChannelList.STAFF_CHANNEL.sendMessageEmbeds(builder.build()).queue();
             return;
-        } else if (data.getLastPlayed() == null) {
-            builder.setColor(0xFFAA00);
-            builder.setAuthor("Welcome, " + displayname + ", to DashNetwork.", null, avatar);
         } else {
             builder.setColor(0x55FF55);
             builder.setAuthor(displayname + " joined.", null, avatar);

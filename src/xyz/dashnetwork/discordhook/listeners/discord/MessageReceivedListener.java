@@ -2,10 +2,7 @@ package xyz.dashnetwork.discordhook.listeners.discord;
 
 import dev.vankka.mcdiscordreserializer.minecraft.MinecraftSerializer;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.MessageType;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.entities.sticker.StickerItem;
@@ -27,6 +24,7 @@ import xyz.dashnetwork.discordhook.utils.ChannelList;
 
 import java.awt.*;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public final class MessageReceivedListener extends ListenerAdapter {
 
@@ -113,7 +111,14 @@ public final class MessageReceivedListener extends ListenerAdapter {
         else if (admin) builder.append("&9&lAdmin&f ");
         else if (owner) builder.append("&9&lOwner&f ");
 
-        builder.append("&8[&9Discord&8]&f " + nearest + nickname).hover("&6" + username).insertion(id);
+        String roles = member.getRoles().stream().map(Role::getName).collect(Collectors.joining(", "));
+
+        Section section = builder.append("&8[&9Discord&8]&f " + nearest + nickname)
+                .insertion(id)
+                .hover("&6" + username);
+
+        if (!roles.isBlank())
+            section.hover("&7Roles: &6" + roles);
 
         if (global) builder.append("&f &l»&f");
         else if (staff) builder.append("&f &6&l»&6");
@@ -135,7 +140,7 @@ public final class MessageReceivedListener extends ListenerAdapter {
 
         for (String split : content.split(" ")) {
             if (!split.isEmpty()) {
-                Section section = builder.append(" " + split);
+                section = builder.append(" " + split);
 
                 if (StringUtils.matchesUrl(split)) {
                     String url = split.toLowerCase().startsWith("http") ? split : "https://" + split;
