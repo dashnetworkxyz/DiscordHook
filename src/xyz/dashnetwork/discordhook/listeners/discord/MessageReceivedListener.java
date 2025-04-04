@@ -111,7 +111,7 @@ public final class MessageReceivedListener extends ListenerAdapter {
         else if (admin) builder.append("&9&lAdmin&f ");
         else if (owner) builder.append("&9&lOwner&f ");
 
-        String roles = member.getRoles().stream().map(Role::getName).collect(Collectors.joining(", "));
+        String roles = member.getRoles().stream().map(Role::getName).collect(Collectors.joining("&7, &6"));
 
         Section section = builder.append("&8[&9Discord&8]&f " + nearest + nickname)
                 .insertion(id)
