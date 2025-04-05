@@ -2,9 +2,9 @@ package xyz.dashnetwork.discordhook.listeners.minecraft;
 
 import com.velocitypowered.api.event.Subscribe;
 import net.dv8tion.jda.api.EmbedBuilder;
+import xyz.dashnetwork.celest.chat.ColorUtils;
+import xyz.dashnetwork.celest.connection.User;
 import xyz.dashnetwork.celest.events.CelestVanishEvent;
-import xyz.dashnetwork.celest.utils.chat.ColorUtils;
-import xyz.dashnetwork.celest.utils.connection.User;
 import xyz.dashnetwork.discordhook.utils.ChannelList;
 
 public final class CelestVanishListener {

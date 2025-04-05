@@ -4,9 +4,9 @@ import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
+import xyz.dashnetwork.celest.chat.ColorUtils;
+import xyz.dashnetwork.celest.connection.User;
 import xyz.dashnetwork.celest.utils.LazyUtils;
-import xyz.dashnetwork.celest.utils.chat.ColorUtils;
-import xyz.dashnetwork.celest.utils.connection.User;
 import xyz.dashnetwork.discordhook.utils.ChannelList;
 
 public final class DisconnectListener {

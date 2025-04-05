@@ -4,14 +4,12 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.interactions.InteractionHook;
-import xyz.dashnetwork.celest.utils.ListUtils;
-import xyz.dashnetwork.celest.utils.chat.ColorUtils;
-import xyz.dashnetwork.celest.utils.connection.User;
+import xyz.dashnetwork.celest.chat.ColorUtils;
+import xyz.dashnetwork.celest.connection.User;
 import xyz.dashnetwork.discordhook.command.DiscordCommand;
 import xyz.dashnetwork.discordhook.utils.RoleList;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public final class CommandList extends DiscordCommand {
 
