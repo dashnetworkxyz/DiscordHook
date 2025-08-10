@@ -9,10 +9,11 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class WebhookUtils {
 
-    private static final Map<Long, Webhook> webhookMap = new HashMap<>();
+    private static final Map<Long, Webhook> webhookMap = new ConcurrentHashMap<>();
 
     public static void broadcast(TextChannel channel, String name, String avatar, String message) {
         Webhook webhook = getWebhook(channel);
